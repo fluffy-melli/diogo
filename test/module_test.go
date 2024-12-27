@@ -14,7 +14,7 @@ func Test(t *testing.T) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	gif, err := render.GIF(urls, 5)
+	gif, err := render.GIF(urls, 10, true)
 	if err != nil {
 		log.Fatalln(err)
 	}
