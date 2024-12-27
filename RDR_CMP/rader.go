@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 )
 
 type Response struct {
@@ -30,13 +29,7 @@ type Response struct {
 	} `json:"response"`
 }
 
-func Time() string {
-	currentTime := time.Now()
-	return currentTime.Format("20060102")
-}
-
-// time : YYYYMMDD | 20241226
-func GetImages(apikey, time string) ([]string, error) {
+func GetImagesURL(apikey, time string) ([]string, error) {
 	URL := "http://apis.data.go.kr/1360000/RadarImgInfoService/getCmpImg"
 	params := url.Values{}
 	params.Add("serviceKey", apikey)
