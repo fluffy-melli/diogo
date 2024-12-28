@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"testing"
 
@@ -9,8 +10,10 @@ import (
 	"github.com/fluffy-melli/krapo/render"
 )
 
-func Test(t *testing.T) {
-	urls, err := RDR_CMP.GetImagesURL("", krapo.Time())
+var API_KEY = ""
+
+func TestGIF(t *testing.T) {
+	urls, err := RDR_CMP.GetImagesURL(API_KEY, krapo.LTime(1)) // RDR_CMP.GetAllURL(API_KEY)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -22,4 +25,12 @@ func Test(t *testing.T) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+}
+
+func TestALLURL(t *testing.T) {
+	urls, err := RDR_CMP.GetAllURL(API_KEY)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println(len(urls))
 }

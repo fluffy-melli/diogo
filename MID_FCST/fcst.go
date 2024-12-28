@@ -1,4 +1,4 @@
-package RDR_CMP
+package MID_FCST
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"strings"
+	"time"
 
 	"github.com/fluffy-melli/krapo"
 )
@@ -24,22 +24,29 @@ type Response struct {
 			TotalCount int    `json:"totalCount"`
 			Items      struct {
 				Item []struct {
-					Images string `json:"rdr-img-file"`
+					WfSv string `json:"wfSv"`
 				} `json:"item"`
 			} `json:"items"`
 		} `json:"body"`
 	} `json:"response"`
 }
 
-func GetImagesURL(apikey, time string) ([]string, error) {
-	URL := "http://apis.data.go.kr/1360000/RadarImgInfoService/getCmpImg"
+func GetFcst(apikey string) ([]string, error) {
+	var tmfc string
+	currentTime := time.Now()
+	if currentTime.Hour()*60+currentTime.Minute() >= 18*60 {
+		tmfc = krapo.Time() + "1800"
+	} else {
+		tmfc = krapo.Time() + "0600"
+	}
+	URL := "http://apis.data.go.kr/1360000/MidFcstInfoService/getMidFcst"
 	params := url.Values{}
 	params.Add("serviceKey", apikey)
 	params.Add("pageNo", "1")
 	params.Add("numOfRows", "1")
 	params.Add("dataType", "JSON")
-	params.Add("data", "CMP_WRC")
-	params.Add("time", time)
+	params.Add("stnId", "108")
+	params.Add("tmFc", tmfc)
 	resp, err := http.Get(URL + "?" + params.Encode())
 	if err != nil {
 		return nil, err
@@ -59,22 +66,7 @@ func GetImagesURL(apikey, time string) ([]string, error) {
 	}
 	respond := make([]string, 0)
 	for _, item := range response.Response.Body.Items.Item {
-		images := item.Images
-		images = strings.ReplaceAll(images, "[", "")
-		images = strings.ReplaceAll(images, "]", "")
-		respond = append(respond, strings.Split(images, ",")...)
-	}
-	return respond, nil
-}
-
-func GetAllURL(apikey string) ([]string, error) {
-	respond := make([]string, 0)
-	for i := 0; i <= 1; i++ {
-		urls, err := GetImagesURL(apikey, krapo.LTime(i))
-		if err != nil {
-			return nil, err
-		}
-		respond = append(respond, urls...)
+		respond = append(respond, item.WfSv)
 	}
 	return respond, nil
 }
