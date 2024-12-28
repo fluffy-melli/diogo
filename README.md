@@ -22,7 +22,7 @@ func main(t *testing.T) {
 	}
 	fmt.Println(info[0])
 }
-
+```
 
 ```txt
 ○ (강수) 1월 2일(목) 오후~3일(금) 오전 제주도에 비 또는 눈이 오는 곳이 있겠습니다.
