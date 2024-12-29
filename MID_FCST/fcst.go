@@ -36,8 +36,10 @@ func GetFcst(apikey string) ([]string, error) {
 	currentTime := time.Now()
 	if currentTime.Hour()*60+currentTime.Minute() >= 18*60 {
 		tmfc = krapo.Time() + "1800"
-	} else {
+	} else if currentTime.Hour()*60+currentTime.Minute() >= 6*60 {
 		tmfc = krapo.Time() + "0600"
+	} else {
+		tmfc = krapo.LTime(1) + "1800"
 	}
 	URL := "http://apis.data.go.kr/1360000/MidFcstInfoService/getMidFcst"
 	params := url.Values{}
